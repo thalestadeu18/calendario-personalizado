@@ -1,3 +1,6 @@
+from engine.estacoes import get_estacao
+from engine.luas import get_fase_lua
+
 def calcular_dia_absoluto(dia, mes, dias_por_mes):
     total = 0
 
@@ -50,3 +53,25 @@ def criar_meses():
         dias_por_mes.append(dias)
 
     return meses, dias_por_mes
+
+def gerar_calendario(meses, dias_por_mes, estacoes, luas):
+    calendario = []
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, dias_por_mes[i] + 1):
+
+            dia_abs = calcular_dia_absoluto(dia, i, dias_por_mes)
+            estacao = get_estacao(dia_abs, estacoes)
+
+            fases = []
+            for lua in luas:
+                fases.append(get_fase_lua(dia_abs, lua.ciclo))
+
+            calendario.append({
+                "mes": mes,
+                "dia": dia,
+                "estacao": estacao,
+                "luas": fases
+            })
+
+    return calendario
