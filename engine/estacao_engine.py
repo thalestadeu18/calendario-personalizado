@@ -1,3 +1,5 @@
+from models.estacao import Estacao
+
 def get_estacao(dia_absoluto, estacoes):
     for estacao in estacoes:
 

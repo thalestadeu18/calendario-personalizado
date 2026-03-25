@@ -1,3 +1,5 @@
+from models.lua import Lua
+
 def fase_da_lua(dia_absoluto, ciclo):
     posicao = dia_absoluto % ciclo
 
