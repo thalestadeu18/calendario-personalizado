@@ -52,8 +52,8 @@ def criar_estacoes(total_dias):
 
         # validar inicio e fim corretamente
         while True:
-            inicio = perguntar_numero(...)
-            fim = perguntar_numero(...)
+            inicio = perguntar_numero(f"que dia inicia {nome}? ", minimo=1)
+            fim = perguntar_numero(f"que dia termina {nome}? ", minimo=2)
 
             if inicio > total_dias or fim > total_dias:
                 print("Dias fora do limite do ano")
