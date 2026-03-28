@@ -4,10 +4,15 @@ from engine.lua_engine import fase_da_lua
 
 
 def calcular_dia_absoluto(data, config):
-    total = 0
+    # 1. Pega os dias de TODOS os anos anteriores
+    total_dias_por_ano = sum(config.dias_por_mes)
+    total = (data.ano - 1) * total_dias_por_ano
 
+    # 2. Soma os meses que já passaram no ano atual
     for i in range(data.mes):
         total += config.dias_por_mes[i]
+        
+    # 3. Soma os dias do mês atual
     total += data.dia
 
     return total

@@ -1,10 +1,11 @@
 from models.data import Data
 from engine.calendario import get_info_dia, avancar_n_dias
 
-def gerar_calendario(config):
+def gerar_calendario(config, ano_inicial):
     calendario = []
 
-    data = Data(ano=1, mes=0, dia=1)
+    # Aqui também usamos a variável ano_inicial que veio do main
+    data = Data(ano=ano_inicial, mes=0, dia=1)
     total_dias = sum(config.dias_por_mes)
 
     for _ in range(total_dias):
