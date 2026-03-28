@@ -57,3 +57,13 @@ def carregar_calendario(nome_save):
     config = Config(cfg["meses"], cfg["dias_por_mes"], estacoes, luas)
     
     return data, config
+
+def excluir_calendario(nome_save):
+    saves = carregar_todos_saves()
+    if nome_save in saves:
+        del saves[nome_save] # Remove o mundo do dicionário
+        # Escreve o ficheiro novamente, agora sem o mundo apagado
+        with open(ARQUIVO_SAVES, "w", encoding="utf-8") as f:
+            json.dump(saves, f, indent=4, ensure_ascii=False)
+        return True
+    return False

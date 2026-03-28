@@ -5,31 +5,56 @@ from utils.calendario_utils import gerar_calendario
 from config.calendario_config import Config
 from models.data import Data
 from utils.input_utils import perguntar_numero
-# 👇 Importando da nova biblioteca!
-from engine.biblioteca import carregar_todos_saves, carregar_calendario, salvar_calendario
+from engine.biblioteca import carregar_todos_saves, carregar_calendario, salvar_calendario, excluir_calendario
 
 def menu_inicial():
-    print("=== 🌍 BIBLIOTECA DE MUNDOS 🌍 ===")
-    saves = carregar_todos_saves()
-    
-    if saves:
-        print("1. Forjar Novo Mundo")
-        print("2. Abrir Pergaminho Existente (Carregar Mundo)")
-        opcao = input("Escolha (1 ou 2): ").strip()
+    while True:
+        print("\n=== 🌍 BIBLIOTECA DE MUNDOS 🌍 ===")
+        saves = carregar_todos_saves()
         
-        if opcao == '2':
-            nomes_saves = list(saves.keys())
-            print("\n--- MUNDOS GUARDADOS ---")
-            for i, nome in enumerate(nomes_saves):
-                print(f"{i+1}. {nome}")
+        if saves:
+            print("1. Forjar Novo Mundo")
+            print("2. Abrir Pergaminho Existente (Carregar Mundo)")
+            print("3. 🔥 Queimar Pergaminho (Excluir Mundo)")
+            opcao = input("Escolha (1, 2 ou 3): ").strip()
             
-            escolha = perguntar_numero("Qual mundo deseja visitar? ", minimo=1, maximo=len(nomes_saves))
-            nome_escolhido = nomes_saves[escolha - 1]
-            data, config = carregar_calendario(nome_escolhido)
-            return nome_escolhido, data, config
+            if opcao == '2':
+                nomes_saves = list(saves.keys())
+                print("\n--- MUNDOS GUARDADOS ---")
+                for i, nome in enumerate(nomes_saves):
+                    print(f"{i+1}. {nome}")
+                
+                escolha = perguntar_numero("Qual mundo deseja visitar? ", minimo=1, maximo=len(nomes_saves))
+                nome_escolhido = nomes_saves[escolha - 1]
+                data, config = carregar_calendario(nome_escolhido)
+                return nome_escolhido, data, config
+                
+            elif opcao == '3':
+                nomes_saves = list(saves.keys())
+                print("\n--- QUEIMAR PERGAMINHO ---")
+                for i, nome in enumerate(nomes_saves):
+                    print(f"{i+1}. {nome}")
+                
+                escolha = perguntar_numero("Qual mundo deseja excluir permanentemente? ", minimo=1, maximo=len(nomes_saves))
+                nome_escolhido = nomes_saves[escolha - 1]
+                
+                certeza = input(f"Tem certeza que deseja apagar '{nome_escolhido}' para sempre? (s/n): ").strip().lower()
+                if certeza == 's':
+                    excluir_calendario(nome_escolhido)
+                    print(f"🔥 O mundo de '{nome_escolhido}' virou cinzas...")
+                else:
+                    print("✅ O mundo foi poupado.")
+                continue # Volta para o início do menu inicial
+                
+            elif opcao == '1':
+                return criar_novo_mundo()
             
-    # Se não houver saves ou o utilizador escolher 1
-    return criar_novo_mundo()
+            else:
+                print("❌ Opção inválida.")
+                
+        else:
+            # Se não houver saves, vai direto para a criação
+            return criar_novo_mundo()
 
 def criar_novo_mundo():
     print("\n=== 🛠️ FORJA DO MUNDO 🛠️ ===")
