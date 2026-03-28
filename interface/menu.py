@@ -1,4 +1,6 @@
 from engine.calendario import get_info_dia, avancar_n_dias
+from utils.input_utils import perguntar_numero
+
 
 def exibir_opcoes():
     print("\n" + "="*35)
@@ -10,18 +12,22 @@ def exibir_opcoes():
     print("4. Sair")
     print("="*35)
 
+
 def mostrar_calendario_completo(calendario):
     print("\n--- VISÃO GERAL DO ANO ---")
+
     for dia in calendario:
         luas_str = ', '.join(
             f"{lua['nome']} ({lua['fase']})" for lua in dia['luas']
-)
+        )
+
+        print(f"{dia['mes']} - Dia {dia['dia']} | Estação: {dia['estacao']} | Luas: {luas_str}")
+
+    print("--------------------------")
+
 
 def iniciar_menu(data_atual, config, calendario_completo):
-    """
-    Loop principal de interação com o usuário.
-    Mantém o programa rodando até o usuário escolher sair.
-    """
+
     while True:
         exibir_opcoes()
         opcao = input("Escolha o que deseja fazer: ").strip()
@@ -35,23 +41,18 @@ def iniciar_menu(data_atual, config, calendario_completo):
             print(f"🔢 Dia absoluto do ano: {info['dia_absoluto']}")
 
             print("🌕 Fases das Luas:")
-            for lua in info['luas']:
-                print(f"   - {lua['nome']}: {lua['fase']}")
+            for nome, fase in info['luas'].items():
+                print(f"   - {nome}: {fase}")
+
             print("-" * 35)
 
         elif opcao == '2':
-            try:
-                qtd = perguntar_numero("\nQuantos dias deseja avançar? ", minimo=1)
-                if qtd <= 0:
-                    print("❌ Digite um valor maior que zero.")
-                    continue
-                data_atual = avancar_n_dias(data_atual, qtd, config)
-            except ValueError:
-                print("❌ Entrada inválida. Digite um número inteiro.")
+            qtd = perguntar_numero("\nQuantos dias deseja avançar? ", minimo=1)
+            data_atual = avancar_n_dias(data_atual, qtd, config)
+            print(f"✅ Tempo avançado em {qtd} dias!")
 
         elif opcao == '3':
-            calendario = gerar_calendario(config)
-            mostrar_calendario_completo(calendario)
+            mostrar_calendario_completo(calendario_completo)
 
         elif opcao == '4':
             print("\nFechando os pergaminhos do calendário... Até a próxima! ⏳")

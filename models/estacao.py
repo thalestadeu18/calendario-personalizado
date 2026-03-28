@@ -5,5 +5,5 @@ class Estacao:
         self.inicio = inicio
         self.fim = fim
     
-    def __repr__(self):
-        return f"Estacao({self.nome}, {self.inicio}, {self.fim})"
+    def __str__(self):
+        return f"{self.nome} (dias {self.inicio} a {self.fim})"

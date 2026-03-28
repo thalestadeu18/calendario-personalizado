@@ -1,7 +1,8 @@
 from models.lua import Lua
+from utils.input_utils import perguntar_numero
 
 def fase_da_lua(dia_absoluto, ciclo):
-    posicao = dia_absoluto % ciclo
+    posicao = (dia_absoluto - 1) % ciclo
 
     if posicao == 0:
         return "Lua Nova"
@@ -15,21 +16,6 @@ def fase_da_lua(dia_absoluto, ciclo):
         return "Minguante"
 
 
-def perguntar_numero(msg, minimo=None):
-    while True:
-        try:
-            valor = int(input(msg))
-
-            if minimo is not None and valor < minimo:
-                print(f"Digite um valor >= {minimo}")
-                continue
-
-            return valor
-
-        except ValueError:
-            print("Entrada inválida. Digite um número inteiro.")
-
-
 def criar_luas():
     luas = []
 
@@ -37,21 +23,21 @@ def criar_luas():
 
     for i in range(quantidade):
 
-        # nome com validação
         while True:
-            nome = input(f"Nome da Lua {i+1}: ")
-            if nome.strip() == "":
+            nome = input(f"Nome da Lua {i+1}: ").strip()
+
+            if not nome:
                 print("Nome inválido")
                 continue
+
             if any(l.nome == nome for l in luas):
                 print("Essa lua já existe")
                 continue
+
             break
 
         ciclo = perguntar_numero(f"Quantos dias dura o ciclo de {nome}? ", minimo=1)
 
-        lua = Lua(nome, ciclo)
-
-        luas.append(lua)
+        luas.append(Lua(nome, ciclo))
 
     return luas

@@ -1,6 +1,7 @@
+from models.data import Data
 from engine.estacao_engine import get_estacao
 from engine.lua_engine import fase_da_lua
-from models.data import Data
+from utils.calendario_utils import calcular_dia_absoluto
 
 
 def calcular_dia_absoluto(data, config):

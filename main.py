@@ -1,37 +1,34 @@
-from engine.calendario import gerar_calendario
-from engine.calendario import criar_meses
+from models.data import Data
+from interface.setup import criar_meses
 from engine.estacao_engine import criar_estacoes
 from engine.lua_engine import criar_luas
+from interface.menu import iniciar_menu
+from utils.calendario_utils import gerar_calendario
+from config.calendario_config import Config
 
 
 def main():
-
-    # meses
+    print("=== 🛠️ FORJA DO MUNDO 🛠️ ===")
+    
+    # Criação
     meses, dias_por_mes = criar_meses()
-
     total_dias = sum(dias_por_mes)
 
-    # estações
     estacoes = criar_estacoes(total_dias)
-
-    # luas
     luas = criar_luas()
+    
+    # Config
+    config = Config(meses, dias_por_mes, estacoes, luas)
+    
+    # Estado inicial
+    data_inicial = Data(ano=1, mes=0, dia=1)
+    
+    # Pré-cálculo
+    calendario_completo = gerar_calendario(config)
 
-    # gerar calendário
-    calendario = gerar_calendario(meses, dias_por_mes, estacoes, luas)
-
-    # exibir
-    mostrar_calendario(calendario)
-
-
-def mostrar_calendario(calendario):
-
-    for dia in calendario:
-        print(
-            f"{dia['mes']} - Dia {dia['dia']} | "
-            f"Estação: {dia['estacao']} | "
-            f"Luas: {', '.join(dia['luas'])}"
-        )
+    print("\n✨ Mundo criado com sucesso!")
+    
+    iniciar_menu(data_inicial, config, calendario_completo)
 
 
 if __name__ == "__main__":

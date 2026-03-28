@@ -4,5 +4,5 @@ class Data:
         self.mes = mes
         self.dia = dia
 
-    def __repr__(self):
+    def __str__(self):
         return f"Data({self.dia}, {self.mes}, {self.ano})"
