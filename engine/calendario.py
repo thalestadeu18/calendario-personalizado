@@ -1,78 +1,80 @@
 from engine.estacao_engine import get_estacao
 from engine.lua_engine import fase_da_lua
-from models.estacao import Estacao
 from models.data import Data
-from models.lua import Lua
 
-def calcular_dia_absoluto(dia, mes, dias_por_mes):
+
+def calcular_dia_absoluto(data, config):
     total = 0
 
-    for i in range(mes):
-        total += dias_por_mes[i]
-    total += dia
+    for i in range(data.mes):
+        total += config.dias_por_mes[i]
+    total += data.dia
+
     return total
 
+def proximo_dia(data, config):
 
-def perguntar_numero(msg, minimo=None):
-    while True:
-        try:
-            valor = int(input(msg))
+    novo_dia = data.dia
+    novo_mes = data.mes
+    novo_ano = data.ano
 
-            if minimo is not None and valor < minimo:
-                print(f"Digite um valor >= {minimo}")
-                continue
+    if novo_mes >= len(config.dias_por_mes):
+        raise ValueError("Mês inválido")
 
-            return valor
+    dias_no_mes = config.dias_por_mes[novo_mes]
 
-        except ValueError:
-            print("Entrada inválida. Digite um número inteiro.")
+    if novo_dia < dias_no_mes:
+        novo_dia += 1
 
+    if novo_dia > config.dias_por_mes[novo_mes]:
+        raise ValueError("Dia inválido para o mês")
 
-def criar_meses():
-    meses = []
-    dias_por_mes = []
+    else:
+        novo_dia = 1
+        novo_mes += 1
 
-    quantidade = perguntar_numero("Quantos meses terá o ano? ", minimo=1)
+        if novo_mes >= len(config.meses):
+            novo_mes = 0
+            novo_ano += 1
 
-    for i in range(quantidade):
+    return Data(novo_ano, novo_mes, novo_dia)
 
-        # validar nome
-        while True:
-            nome = input(f"Nome do mês {i+1}: ")
+def avancar_n_dias(data, n, config):
 
-            if nome.strip() == "":
-                print("Nome inválido")
-                continue
+    if n < 0:
+        raise ValueError("n deve ser >= 0")
 
-            if nome in meses:
-                print("Esse mês já existe")
-                continue
+    nova_data = Data(data.ano, data.mes, data.dia)
 
-            break
+    for _ in range(n):
+        nova_data = proximo_dia(nova_data, config)
 
-        dias = perguntar_numero(f"Quantos dias tem {nome}? ", minimo=1)
-
-        meses.append(nome)
-        dias_por_mes.append(dias)
-
-    return meses, dias_por_mes
+    return nova_data
 
 
-def gerar_calendario(meses, dias_por_mes, estacoes, luas):
-    calendario = []
+def get_info_dia(data, config):
 
-    for i, mes in enumerate(meses):
-        for dia in range(1, dias_por_mes[i] + 1):
+    dia_abs = calcular_dia_absoluto(data, config)
 
-            dia_abs = calcular_dia_absoluto(dia, i, dias_por_mes)
-            estacao = get_estacao(dia_abs, estacoes)
+    estacao_atual = get_estacao(dia_abs, config.estacoes)
 
-            fases = []
-            for lua in luas:
-                fases.append(fase_da_lua(dia_abs, lua.ciclo))
+    if data.mes >= len(config.meses):
+        raise ValueError("Mês inválido")
 
-            calendario.append(
-                {"mes": mes, "dia": dia, "estacao": estacao, "luas": fases}
-            )
+    fases_luas = []
 
-    return calendario
+    for lua in config.luas:
+        fases_luas.append({
+            "nome": lua.nome,
+            "fase": fase_da_lua(dia_abs, lua.ciclo)
+        })
+
+    return {
+        "ano": data.ano,
+        "mes": data.mes,
+        "mes_nome": config.meses[data.mes],
+        "dia": data.dia,
+        "dia_absoluto": dia_abs,
+        "estacao": estacao_atual,
+        "luas": fases_luas,
+    }
