@@ -78,6 +78,7 @@ def get_info_dia(data, config):
         })
 
     return {
+        "data": data,
         "ano": data.ano,
         "mes": data.mes,
         "mes_nome": config.meses[data.mes],
