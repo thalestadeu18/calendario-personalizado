@@ -1,6 +1,6 @@
 from models.estacao import Estacao
 from utils.input_utils import perguntar_numero
-from engine.estacao_engine import tem_sobreposicao
+
 
 def get_estacao(dia_absoluto, config):
     total_dias = sum(config.dias_por_mes)

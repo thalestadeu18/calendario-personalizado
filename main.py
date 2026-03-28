@@ -1,11 +1,10 @@
 from models.data import Data
 from interface.setup import criar_meses
-from engine.estacao_engine import criar_estacoes
 from engine.lua_engine import criar_luas
 from interface.menu import iniciar_menu
 from utils.calendario_utils import gerar_calendario
 from config.calendario_config import Config
-
+from interface.setup import criar_estacoes
 
 def main():
     print("=== 🛠️ FORJA DO MUNDO 🛠️ ===")

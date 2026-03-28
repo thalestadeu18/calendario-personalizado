@@ -2,7 +2,6 @@ from models.estacao import Estacao
 from utils.input_utils import perguntar_numero
 from engine.estacao_engine import tem_sobreposicao
 
-
 def criar_meses():
     meses = []
     dias_por_mes = []

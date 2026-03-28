@@ -41,8 +41,8 @@ def iniciar_menu(data_atual, config, calendario_completo):
             print(f"🔢 Dia absoluto do ano: {info['dia_absoluto']}")
 
             print("🌕 Fases das Luas:")
-            for nome, fase in info['luas'].items():
-                print(f"   - {nome}: {fase}")
+            for lua in info['luas']:
+                print(f"   - {lua['nome']}: {lua['fase']}")
 
             print("-" * 35)
 

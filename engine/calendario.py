@@ -1,7 +1,6 @@
 from models.data import Data
 from engine.estacao_engine import get_estacao
 from engine.lua_engine import fase_da_lua
-from utils.calendario_utils import calcular_dia_absoluto
 
 
 def calcular_dia_absoluto(data, config):
@@ -14,7 +13,6 @@ def calcular_dia_absoluto(data, config):
     return total
 
 def proximo_dia(data, config):
-
     novo_dia = data.dia
     novo_mes = data.mes
     novo_ano = data.ano
@@ -24,16 +22,20 @@ def proximo_dia(data, config):
 
     dias_no_mes = config.dias_por_mes[novo_mes]
 
-    if novo_dia < dias_no_mes:
-        novo_dia += 1
-
-    if novo_dia > config.dias_por_mes[novo_mes]:
+    # Validação de segurança primeiro
+    if novo_dia > dias_no_mes:
         raise ValueError("Dia inválido para o mês")
 
+    # Lógica de avançar o tempo
+    if novo_dia < dias_no_mes:
+        # É um dia normal, só soma 1
+        novo_dia += 1
     else:
+        # Chegou no último dia do mês! (novo_dia == dias_no_mes)
         novo_dia = 1
         novo_mes += 1
 
+        # Chegou no fim do ano!
         if novo_mes >= len(config.meses):
             novo_mes = 0
             novo_ano += 1
@@ -57,7 +59,7 @@ def get_info_dia(data, config):
 
     dia_abs = calcular_dia_absoluto(data, config)
 
-    estacao_atual = get_estacao(dia_abs, config.estacoes)
+    estacao_atual = get_estacao(dia_abs, config)
 
     if data.mes >= len(config.meses):
         raise ValueError("Mês inválido")
